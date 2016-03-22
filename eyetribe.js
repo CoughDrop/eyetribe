@@ -18,6 +18,9 @@
     },
     listen: function() {
       if(socket) { return; }
+      latest = {
+        gaze_ts: 0
+      };
       socket = new net.Socket();
       socket.heartbeatCounter = 0;
       socket.on('data', function(raw_data) {
