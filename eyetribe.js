@@ -11,7 +11,9 @@
     },
     stop_listening: function() {
       listening = false;
-      socket.destroy();
+      if(socket) {
+        socket.destroy();
+      }
       socket = null;
     },
     listen: function() {
@@ -19,7 +21,11 @@
       socket = new net.Socket();
       socket.heartbeatCounter = 0;
       socket.on('data', function(raw_data) {
-        data = JSON.parse(raw_data);
+        var data = null;
+        try {
+          data = JSON.parse(raw_data);
+        } catch(e) { }
+        if(!data) { return; }
         
         if(data.values && data.values.frame) {
           var trackState = data.values.frame.state;
@@ -43,6 +49,7 @@
             latest.gaze_x = data.values.frame.avg.x;
             latest.gaze_y = data.values.frame.avg.y;
             latest.gaze_ts = (new Date()).getTime();
+            // console.log("found " + latest.gaze_x + ", " + latest.gaze_y);
           }
         } else {
           //console.log(data);
@@ -53,8 +60,8 @@
           latest.screen_width = data.values.screenresw;
           latest.screen_height = data.values.screenresh;
           socket.write(JSON.stringify({category: "tracker", request: "set", values: {"push": true}}));
-        } else if(_this.heartbeatCounter > 5 && listening) {
-          _this.heartbeatCounter = 0;
+        } else if(socket.heartbeatCounter > 5 && listening) {
+          socket.heartbeatCounter = 0;
           socket.write(JSON.stringify({category: "heartbeat"}));
         }
       });
@@ -78,11 +85,11 @@
       });
     },
     ping: function() {
+      // if not already listening, go ahead and start listening
       if(!listening) {
         eyetribe.listen();
       }
       return latest;
-      // if not already listening, go ahead and start listening
     }
   };
   module.exports = eyetribe;
