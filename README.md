@@ -20,7 +20,7 @@ setInterval(function() {
 
 ### Technical Notes
 This module is connecting to the EyeTribe server directly (download and install 
-https://theeyetribe.com/order/my-account/, then plug in your tracker), and assumes 
+[the eyetribe sdk](https://theeyetribe.com/order/my-account/), then plug in your tracker), and assumes 
 the server is running on the default port, 6555.
 
 This library listens for and remembers the latest `avg` results from the eye tracker.
@@ -29,7 +29,7 @@ the javascript is responsible for polling the library for any updated events by 
 `var res = eyetribe.ping()`.
 
 When this library is installed, it should automatically be used by 
-(https://github.com/CoughDrop/gazelinger)[gazelinger.js] if also installed.
+[gazelinger.js](https://github.com/CoughDrop/gazelinger) if also installed.
 
 ### License
 
