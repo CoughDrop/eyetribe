@@ -5,6 +5,7 @@
   var latest = {};
   var listening = false;
   var port = 6555;
+  var socket_errors = 0;
   var eyetribe = {
     setup: function() {
       
@@ -74,6 +75,7 @@
       });
       socket.on('error', function() {
         console.log("socket error");
+        socket_errors++;
         eyetribe.stop_listening();
       });
       socket.connect(port, function() {
@@ -89,7 +91,7 @@
     },
     ping: function() {
       // if not already listening, go ahead and start listening
-      if(!listening) {
+      if(!listening && socket_errors < 10) {
         eyetribe.listen();
       }
       return latest;
