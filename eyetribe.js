@@ -20,7 +20,8 @@
     listen: function() {
       if(socket) { return; }
       latest = {
-        gaze_ts: 0
+        gaze_ts: 0,
+        status: 'not_initialized'
       };
       socket = new net.Socket();
       socket.heartbeatCounter = 0;
@@ -47,6 +48,7 @@
             }
             console.log("eyetribe state changed to \"" + state + "\"");
             latest.gaze_state = state;
+            latest.status = state;
           }
           // console.log(data.values.frame.state + "  " + data.values.frame.avg.x + "," + data.values.frame.avg.y);
           if(data.values.frame.state < 8) {
